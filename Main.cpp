@@ -23,12 +23,30 @@ public:
 	vector3 operator+(vector3 const& v2) {
 		return vector3(this->x + v2.x, this->y + v2.y, this->z + v2.z);
 	}
-	~vector3();
 };
 class matrix4 {
 public:
 	int a, b, c, d;
-
+	matrix4(int a, int b, int c, int d) {
+		this->a = a;
+		this->b = b;
+		this->c = c;
+		this->d = d;
+	}
+	int det() {
+		return a * d - b * c;
+	}
+	matrix4 operator+(matrix4 const& B) {
+		return matrix4(a + B.a, b + B.b, c + B.c, d + B.d);
+	}
+	matrix4 operator*(matrix4 const& B) {
+		return matrix4(a*B.a+b*B.c, a*B.b+b*B.d, c*B.a+d*B.b, c*B.b+d*B.d);
+	}
+	matrix4 transpose() {
+		int temp=this->b;
+		this->b = this->c;
+		this->c = temp;
+	}
 };
 int main() {
 	glfwInit();
