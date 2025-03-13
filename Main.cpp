@@ -11,8 +11,8 @@ using namespace std;
 class vector3
 {
 public:
-	int x, y, z;
-	vector3(int x,int y,int z){
+	GLfloat x, y, z;
+	vector3(GLfloat x=0.0f,GLfloat y=0.0f,GLfloat z=0.0f){
 		this->x = x;
 		this->y = y;
 		this->z = z;
@@ -26,27 +26,21 @@ public:
 };
 class matrix4 {
 public:
-	int a, b, c, d;
-	matrix4(int a, int b, int c, int d) {
-		this->a = a;
-		this->b = b;
-		this->c = c;
-		this->d = d;
+	float m[4][4];
+	matrix4() {
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				m[i][j] = 0;
+			}
+		}
 	}
-	int det() {
-		return a * d - b * c;
+	float* operator[](int row) {
+		if (row < 0 || row >= 4)
+			throw std::out_of_range("Row index out of range!");
+		return m[row];
 	}
-	matrix4 operator+(matrix4 const& B) {
-		return matrix4(a + B.a, b + B.b, c + B.c, d + B.d);
-	}
-	matrix4 operator*(matrix4 const& B) {
-		return matrix4(a*B.a+b*B.c, a*B.b+b*B.d, c*B.a+d*B.b, c*B.b+d*B.d);
-	}
-	matrix4 transpose() {
-		int temp=this->b;
-		this->b = this->c;
-		this->c = temp;
-	}
+	
+
 };
 int main() {
 	glfwInit();
@@ -61,18 +55,42 @@ int main() {
 	}
 	glfwMakeContextCurrent(window);
 	gladLoadGL();
-	glViewport(0, 0, 1000, 1000);
+	glViewport(0, 0, 800, 1000);
 	Shader shaderPrg("default.vert", "default.frag");
 	
+	int h = 800, w = 1000;
+	float a = (float)h / w;
+	float fov = 90.0f;
+	float s_factor = 1 / tanf((fov / 2)*(180.0f/3.141f));
+	float Zn = 0.1f, Zf = 1000.0f;
+	float q = Zf / (Zf - Zn);
+
+	matrix4 proj_mat;
+	proj_mat.createProjectionMatrix(a, fov, Zf, Zn);
+
 	GLfloat vertices[] = {
-	-0.5f,0.5f,0.0f , 1.0f,0.0f,0.0f,
-	0.5f,0.5f,0.0f ,  0.0f,1.0f,0.0f,
-	0.5f,-0.5f,0.0f,  0.0f,0.0f,1.0f,
-	-0.5f,-0.5f,0.0f, 1.0f,1.0f,1.0f
+	0.0f,0.0f,0.0f ,1.0f,1.0f,1.0f,
+	1.0f,0.0f,0.0f,1.0f,1.0f,1.0f,
+	1.0f,1.0f,0.0f ,1.0f,1.0f,1.0f,
+	0.0f,1.0f,0.0f,1.0f,1.0f,1.0f,
+	0.0f,1.0f,1.0f ,1.0f,1.0f,1.0f,
+	1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,
+	1.0f,0.0f,1.0f ,1.0f,1.0f,1.0f,
+	0.0f,0.0f,1.0f, 1.0f,1.0f,1.0f,
 	};
 	GLuint indices[] = {
-		0,1,2,
-		0,2,3
+	0,3,2,
+	0,2,1,
+	1,2,5,
+	1,2,6,
+	0,3,4,
+	0,4,7,
+	3,4,5,
+	3,5,2,
+	0,7,6,
+	0,1,6,
+	7,4,5,
+	7,5,6
 	};
 	VAO VAO1;
 	VAO1.bind();
@@ -90,12 +108,12 @@ int main() {
 	GLuint uniID = glGetUniformLocation(shaderPrg.ID, "scale");
 	glfwSwapBuffers(window);
 	while (!glfwWindowShouldClose(window)) {
-		glClearColor(0.3f, 0.0f, 0.13f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		shaderPrg.activate();
 		glUniform1f(uniID, 0.3f);
 		VAO1.bind();
-		glDrawElements(GL_TRIANGLES,6 , GL_UNSIGNED_INT,0);
+		glDrawElements(GL_TRIANGLES, 12 , GL_UNSIGNED_INT,0);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
