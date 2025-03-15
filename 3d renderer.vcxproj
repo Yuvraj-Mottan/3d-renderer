@@ -157,7 +157,7 @@
     <ClInclude Include="VBO.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="C:\Users\Asus\Desktop\Screenshot 2025-03-12 225823.png" />
+    <Image Include="C:\Users\Asus\Desktop\Img.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,5 +1,6 @@
 #include<iostream>
 #include<glad/glad.h>
+#include<vector>
 #include<GLFW/glfw3.h>
 #include"stb_image.h"
 #include"shaderClass.h"
@@ -8,40 +9,63 @@
 #include"EBO.h"
 using namespace std;
 
-class vector3
-{
-public:
-	GLfloat x, y, z;
-	vector3(GLfloat x=0.0f,GLfloat y=0.0f,GLfloat z=0.0f){
-		this->x = x;
-		this->y = y;
-		this->z = z;
-	}
-	vector3 operator*(float const& a) {
-		return vector3(this->x * a, this->y * a, this->z * a);
-	}
-	vector3 operator+(vector3 const& v2) {
-		return vector3(this->x + v2.x, this->y + v2.y, this->z + v2.z);
-	}
+struct vector3 {
+	float x, y, z;
 };
-class matrix4 {
-public:
-	float m[4][4];
-	matrix4() {
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
-				m[i][j] = 0;
-			}
+struct triangle {
+	vector3 vert[3];
+};
+struct mesh {
+	vector<triangle> m;
+};
+
+struct matrix4 {
+	float mat[4][4] = { 0 };
+};
+
+struct vector3 matrixMultiply(struct vector3 i, struct matrix4 m) {
+	struct vector3 o;
+	float w = m.mat[0][3] * i.x + m.mat[1][3] * i.y + m.mat[2][3] * i.z + m.mat[3][3];
+	o.x = (m.mat[0][0] * i.x + m.mat[1][0] * i.y + m.mat[2][0] * i.z + m.mat[3][0]);
+	o.y = (m.mat[0][1] * i.x + m.mat[1][1] * i.y + m.mat[2][1] * i.z + m.mat[3][1]);
+	o.z = (m.mat[0][2] * i.x + m.mat[1][2] * i.y + m.mat[2][2] * i.z + m.mat[3][2]);
+
+	if (w != 0) {
+		o.x /= w;
+		o.y /= w;
+		o.z /= w;
+	}
+	return o;
+}
+
+mesh transform(mesh input_mesh, matrix4 proj_matrix) {
+	triangle out_triangle;
+	mesh output_mesh;
+	for (auto tri : input_mesh.m) {
+		out_triangle.vert[0] = matrixMultiply(tri.vert[0], proj_matrix);
+		out_triangle.vert[1] = matrixMultiply(tri.vert[1], proj_matrix);
+		out_triangle.vert[2] = matrixMultiply(tri.vert[2], proj_matrix);
+		output_mesh.m.push_back(out_triangle);
+	}
+	return output_mesh;
+}
+
+GLfloat* tovertexArray(mesh input_mesh) {
+	int number_triangles = input_mesh.m.size();
+	int number_vector = 3 * number_triangles;
+	int number_vertex = 3 * number_vector;
+	GLfloat *out_vertices=new GLfloat[number_vertex];
+	int count = 0;
+	for (auto tri : input_mesh.m) {
+		for (auto v : tri.vert) {
+			out_vertices[count++]=v.x;
+			out_vertices[count++] = v.y;
+			out_vertices[count++] = v.z;
 		}
 	}
-	float* operator[](int row) {
-		if (row < 0 || row >= 4)
-			throw std::out_of_range("Row index out of range!");
-		return m[row];
-	}
-	
+	return out_vertices;
+}
 
-};
 int main() {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -55,18 +79,48 @@ int main() {
 	}
 	glfwMakeContextCurrent(window);
 	gladLoadGL();
-	glViewport(0, 0, 800, 1000);
+	glViewport(0, 0, 1000, 1000);
 	Shader shaderPrg("default.vert", "default.frag");
-	
+	struct mesh cube,cube_projected;
+	cube.m = {
+		// SOUTH
+		{ 0.0f, 0.0f, 0.0f,    0.0f, 1.0f, 0.0f,    1.0f, 1.0f, 0.0f },
+		{ 0.0f, 0.0f, 0.0f,    1.0f, 1.0f, 0.0f,    1.0f, 0.0f, 0.0f },
+
+		// EAST                                                      
+		{ 1.0f, 0.0f, 0.0f,    1.0f, 1.0f, 0.0f,    1.0f, 1.0f, 1.0f },
+		{ 1.0f, 0.0f, 0.0f,    1.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f },
+
+		// NORTH                                                     
+		{ 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f },
+		{ 1.0f, 0.0f, 1.0f,    0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f },
+
+		// WEST                                                      
+		{ 0.0f, 0.0f, 1.0f,    0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 0.0f },
+		{ 0.0f, 0.0f, 1.0f,    0.0f, 1.0f, 0.0f,    0.0f, 0.0f, 0.0f },
+
+		// TOP                                                       
+		{ 0.0f, 1.0f, 0.0f,    0.0f, 1.0f, 1.0f,    1.0f, 1.0f, 1.0f },
+		{ 0.0f, 1.0f, 0.0f,    1.0f, 1.0f, 1.0f,    1.0f, 1.0f, 0.0f },
+
+		// BOTTOM                                                    
+		{ 1.0f, 0.0f, 1.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f },
+		{ 1.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    1.0f, 0.0f, 0.0f },
+	};
+
+	struct matrix4 proj_matrix;
 	int h = 800, w = 1000;
 	float a = (float)h / w;
 	float fov = 90.0f;
-	float s_factor = 1 / tanf((fov / 2)*(180.0f/3.141f));
-	float Zn = 0.1f, Zf = 1000.0f;
+	float Zn = 1.0f, Zf = 1000.0f;
 	float q = Zf / (Zf - Zn);
-
-	matrix4 proj_mat;
-	proj_mat.createProjectionMatrix(a, fov, Zf, Zn);
+	float f = 1.0f / tanf(fov * (3.14159f / 180.0f) / 2.0f);
+	proj_matrix.mat[0][0] = a * f;
+	proj_matrix.mat[1][1] = f;
+	proj_matrix.mat[2][2] = q;
+	proj_matrix.mat[3][2] = -Zn * q;
+	proj_matrix.mat[2][3] = 1.0f;
+	proj_matrix.mat[3][3] = 0.0f;
 
 	GLfloat vertices[] = {
 	0.0f,0.0f,0.0f ,1.0f,1.0f,1.0f,
@@ -78,6 +132,9 @@ int main() {
 	1.0f,0.0f,1.0f ,1.0f,1.0f,1.0f,
 	0.0f,0.0f,1.0f, 1.0f,1.0f,1.0f,
 	};
+
+	mesh cube_transformed=transform(cube, proj_matrix);
+	GLfloat *vert_transformed = tovertexArray(cube_transformed);
 	GLuint indices[] = {
 	0,3,2,
 	0,2,1,
@@ -92,28 +149,28 @@ int main() {
 	7,4,5,
 	7,5,6
 	};
+	int ind_size = sizeof(indices) / sizeof(indices[0]);
 	VAO VAO1;
 	VAO1.bind();
-	VBO VBO1(vertices, sizeof(vertices));
+	VBO VBO1(vert_transformed, sizeof(vert_transformed));
 	EBO EBO1(indices, sizeof(indices));
 	VBO1.bind();
-	VAO1.linkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
-	VAO1.linkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3*sizeof(float)));
+	VAO1.linkAttrib(VBO1, 0, 3, GL_FLOAT, 3 * sizeof(float), (void*)0);
 
 	VAO1.unbind();
 	EBO1.bind();
 	VAO1.unbind();
 	VBO1.unbind();
 	EBO1.unbind();
-	GLuint uniID = glGetUniformLocation(shaderPrg.ID, "scale");
+
 	glfwSwapBuffers(window);
 	while (!glfwWindowShouldClose(window)) {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		shaderPrg.activate();
-		glUniform1f(uniID, 0.3f);
 		VAO1.bind();
-		glDrawElements(GL_TRIANGLES, 12 , GL_UNSIGNED_INT,0);
+		// Draw primitives, number of indices, datatype of indices, index of indices
+		glDrawElements(GL_LINES, ind_size, GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
@@ -122,7 +179,6 @@ int main() {
 	VAO1.Delete();
 	VBO1.Delete();
 	EBO1.Delete();
-
 	shaderPrg.Delete();
 	glfwDestroyWindow(window);
 	glfwTerminate();
