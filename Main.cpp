@@ -5,6 +5,7 @@
 #include "shaderClass.h"
 #include"Material.h"
 #include "triangle_mesh.h"
+#include"Maths.h"
 
 using namespace std;
 
@@ -50,8 +51,28 @@ int main() {
     Material* material = new Material("D:\\Projects\\3d renderer\\3d renderer\\Img.jpeg");
     Material* mask = new Material("D:\\Projects\\mask.jpeg");
 
+    
+    vec3 quad_position = { 0.4f,-0.2f,0.0f };
+    vec3 camera_position = { -5.0f,0.0f,3.0f };
+    vec3 camera_target = { 0.0f,0.0f,0.0f };
+    unsigned int model_location = glGetUniformLocation(shaderPrg.ID, "model");
+    unsigned int view_location = glGetUniformLocation(shaderPrg.ID, "view");
+    unsigned int projection_location = glGetUniformLocation(shaderPrg.ID, "projection");
+
+    mat4 projection = createProjection(45.0f, 640.0f/480.0f, 0.1f, 10.0f);
+    mat4 view = lookAt(camera_position, camera_target);
+    glUniformMatrix4fv(view_location, 1, GL_FALSE, view.m);
+    glUniformMatrix4fv(projection_location, 1, GL_FALSE, projection.m);
+     
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
+        mat4 model = createModelMatrix(quad_position,10 * glfwGetTime());   
+        glUniformMatrix4fv(model_location, 1, GL_FALSE, model.m);
+
         glClear(GL_COLOR_BUFFER_BIT);
 
         // Activate shader and bind VAO
