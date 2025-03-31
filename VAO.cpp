@@ -9,10 +9,10 @@ void VAO::unbind() {
 	glBindVertexArray(0);
 }
 void VAO::linkAttrib(VBO B, GLuint layout, GLuint numComponents, GLenum type, GLsizeiptr stride, void* offset) {
-	B.bind();
+	B.Bind();
 	glVertexAttribPointer(layout, numComponents, type, GL_FALSE, stride, offset);
 	glEnableVertexAttribArray(layout);
-	B.unbind();
+	B.Unbind();
 }
 void VAO::Delete() {
 	glDeleteVertexArrays(1, &ID);
