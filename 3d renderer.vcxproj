@@ -137,7 +137,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="app.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="camera_system.cpp" />
     <ClCompile Include="EBO.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="linearAlgebra.cpp" />
@@ -145,6 +147,9 @@
     <ClCompile Include="material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="motion_system.cpp" />
+    <ClCompile Include="OBJLoader.cpp" />
+    <ClCompile Include="render_system.cpp" />
     <ClCompile Include="shaderClass.cpp" />
     <ClCompile Include="stb.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -153,30 +158,50 @@
     <ClCompile Include="VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\scene.bin" />
+    <None Include="..\scene.gltf" />
     <None Include="default.frag" />
     <None Include="default.vert" />
     <None Include="light.frag" />
     <None Include="light.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="app.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="camera_components.h" />
+    <ClInclude Include="camera_system.h" />
     <ClInclude Include="EBO.h" />
     <ClInclude Include="Libraries\include\json\json.h" />
+    <ClInclude Include="linear_algebra.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Maths.h" />
-    <ClInclude Include="mesh.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="motion_system.h" />
+    <ClInclude Include="OBJLoader.h" />
+    <ClInclude Include="physics_components.h" />
+    <ClInclude Include="render_components.h" />
+    <ClInclude Include="render_system.h" />
     <ClInclude Include="shaderClass.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="transform_components.h" />
     <ClInclude Include="triangle_mesh.h" />
     <ClInclude Include="VAO.h" />
     <ClInclude Include="VBO.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\mask.jpeg" />
     <Image Include="brick.png" />
     <Image Include="C:\Users\Asus\Desktop\Img.png" />
     <Image Include="floor.png" />
+    <Image Include="image.jpeg" />
+    <Image Include="mask.jpeg" />
+    <Image Include="paper.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\license.txt" />
+    <Text Include="cube2.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

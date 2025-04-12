@@ -8,7 +8,7 @@ public:
 	~TriangleMesh();
 
 private:
-	unsigned int VAO, element_count,EBO;
+	unsigned int VAO, element_count, EBO;
 
 	std::vector<unsigned int> VBOs;
 };

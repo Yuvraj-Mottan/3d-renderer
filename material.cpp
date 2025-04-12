@@ -25,6 +25,5 @@ Material::~Material() {
 }
 void Material::use(int unit) {
 	glActiveTexture(GL_TEXTURE0 + unit);
-	glBindTexture(GL_TEXTURE_2D,texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
 }
-

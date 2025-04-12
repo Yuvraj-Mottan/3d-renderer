@@ -30,7 +30,7 @@ mat4 createZrotation(float angle) {
 	matrix.m[10] = 1.0f;
 	matrix.m[15] = 1.0f;
 	matrix.m[1] = s;
-	matrix.m[4] = -s; 
+	matrix.m[4] = -s;
 
 	return matrix;
 }
@@ -96,25 +96,25 @@ mat4 lookAt(vec3 from, vec3 to) {
 	view.m[10] = -f.z;
 	view.m[11] = 0.0f;
 
-	view.m[12] = -dot(r,from);
-	view.m[13] = -dot(u,from);
-	view.m[14] = dot(f,from);
+	view.m[12] = -dot(r, from);
+	view.m[13] = -dot(u, from);
+	view.m[14] = dot(f, from);
 	view.m[15] = 1.0f;
 	return view;
 }
 
 mat4 createProjection(float fovy, float aRatio, float n, float f) {
 	mat4 matrix;
-	float t = tanf(fovy * PI / 180.0f /2.0f);
+	float t = tanf(fovy * PI / 180.0f / 2.0f);
 	for (int i = 0; i < 16; i++)
 	{
 		matrix.m[i] = 0;
 	}
 	matrix.m[0] = 1.0f / (aRatio * t);
 	matrix.m[5] = 1.0f / t;
-	matrix.m[10] = (n+f)/(f-n);
-	matrix.m[14] = 2.0f*f*n / (n-f);
-	matrix.m[11] = 1.0f ;
+	matrix.m[10] = (n + f) / (f - n);
+	matrix.m[14] = 2.0f * f * n / (n - f);
+	matrix.m[11] = 1.0f;
 	return matrix;
 
 }

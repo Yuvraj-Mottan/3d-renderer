@@ -23,7 +23,7 @@ TriangleMesh::TriangleMesh() {
     VBOs.resize(2);
     glGenBuffers(2, VBOs.data());
     glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
-    glBufferData(GL_ARRAY_BUFFER, positions.size()*sizeof(float), positions.data(),
+    glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(float), positions.data(),
         GL_STATIC_DRAW);
 
     //position
@@ -33,10 +33,10 @@ TriangleMesh::TriangleMesh() {
 
     //color
     glBindBuffer(GL_ARRAY_BUFFER, VBOs[1]);
-    glBufferData(GL_ARRAY_BUFFER, colorIndices.size()*sizeof(float), colorIndices.data(),
+    glBufferData(GL_ARRAY_BUFFER, colorIndices.size() * sizeof(float), colorIndices.data(),
         GL_STATIC_DRAW);
 
-    
+
     glGenBuffers(1, &EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, elementIndices.size() * sizeof(int), elementIndices.data(),
@@ -46,7 +46,7 @@ TriangleMesh::TriangleMesh() {
 
 void TriangleMesh::draw() {
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, element_count, GL_UNSIGNED_INT,0);
+    glDrawElements(GL_TRIANGLES, element_count, GL_UNSIGNED_INT, 0);
 }
 
 TriangleMesh::~TriangleMesh() {

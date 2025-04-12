@@ -19,6 +19,18 @@
     <Filter Include="Resource Files\Textures">
       <UniqueIdentifier>{f7f7aca2-a733-482b-9bab-7709edf34f4b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Models">
+      <UniqueIdentifier>{858fadf2-baa5-4821-8cfd-faaf3c2d50ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Models\model2">
+      <UniqueIdentifier>{4039c02a-8e44-4c1f-8ce1-8e2cfff55518}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\camera_component">
+      <UniqueIdentifier>{2ec70fb3-0ca3-4762-8eeb-482ab685af96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\systems">
+      <UniqueIdentifier>{893de2c5-61cb-43d0-b96b-f109fa20be5f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">
@@ -63,6 +75,21 @@
     <ClCompile Include="Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="app.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="camera_system.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_system.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="render_system.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OBJLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="default.vert">
@@ -76,6 +103,12 @@
     </None>
     <None Include="light.frag">
       <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="..\scene.bin">
+      <Filter>Resource Files\Models\model2</Filter>
+    </None>
+    <None Include="..\scene.gltf">
+      <Filter>Resource Files\Models\model2</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -109,13 +142,43 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="mesh.h">
+    <ClInclude Include="Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Libraries\include\json\json.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linear_algebra.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="camera_components.h">
+      <Filter>Header Files\camera_component</Filter>
+    </ClInclude>
+    <ClInclude Include="physics_components.h">
+      <Filter>Header Files\camera_component</Filter>
+    </ClInclude>
+    <ClInclude Include="render_components.h">
+      <Filter>Header Files\camera_component</Filter>
+    </ClInclude>
+    <ClInclude Include="transform_components.h">
+      <Filter>Header Files\camera_component</Filter>
+    </ClInclude>
+    <ClInclude Include="app.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="camera_system.h">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_system.h">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="render_system.h">
+      <Filter>Header Files\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="OBJLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -129,5 +192,23 @@
     <Image Include="floor.png">
       <Filter>Source Files</Filter>
     </Image>
+    <Image Include="..\mask.jpeg">
+      <Filter>Resource Files\Models\model2</Filter>
+    </Image>
+    <Image Include="image.jpeg">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="mask.jpeg">
+      <Filter>Resource Files\Textures</Filter>
+    </Image>
+    <Image Include="paper.jpg">
+      <Filter>Source Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\license.txt">
+      <Filter>Resource Files\Models\model2</Filter>
+    </Text>
+    <Text Include="cube2.txt" />
   </ItemGroup>
 </Project>
